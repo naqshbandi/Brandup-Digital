@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Brandup Digital AI Studio - Dashboard</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Supabase SDK -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+</head>
+<body class="bg-slate-900 text-slate-100 min-h-screen">
+
+    <div class="max-w-4xl mx-auto p-6">
+        <!-- Header -->
+        <header class="flex justify-between items-center bg-slate-800 p-4 rounded-xl shadow-lg mb-6 border border-slate-700">
+            <h1 class="text-xl font-bold text-emerald-400">Brandup Digital AI Studio</h1>
+            <div id="user-info" class="text-sm text-slate-300">Checking session...</div>
+        </header>
+
+        <!-- Main Studio Box -->
+        <main class="bg-slate-800 p-6 rounded-xl shadow-lg space-y-4 border border-slate-700">
+            <h2 class="text-lg font-semibold text-slate-200">Generate New Article</h2>
+            
+            <div>
+                <label class="block text-sm font-medium text-slate-400 mb-1">Article Topic or Keyword</label>
+                <input type="text" id="topic-input" class="w-full p-3 bg-slate-900 border border-slate-700 rounded-lg text-slate-100 focus:outline-none focus:border-emerald-500" placeholder="e.g., Future of Digital Marketing in 2026">
+            </div>
+
+            <button onclick="generateArticle()" class="w-full bg-emerald-600 hover:bg-emerald-500 text-white font-medium p-3 rounded-lg transition shadow-md">
+                Generate Content
+            </button>
+
+            <div id="result-box" class="mt-6 p-4 bg-slate-900 rounded-lg border border-slate-700 hidden">
+                <h3 class="font-semibold text-emerald-400 mb-2">Generated Output:</h3>
+                <div id="output-content" class="text-slate-300 text-sm leading-relaxed whitespace-pre-wrap"></div>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        // Supabase Configuration
+        const SUPABASE_URL = 'https://ikvdzsvgjqmyjdbgpcfj.supabase.co';
+        const SUPABASE_ANON_KEY = 'YOUR_PUBLISHABLE_KEY_HERE'; // Replace with your Supabase Anon Key
+        
+        const supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+        async function checkSession() {
+            try {
+                const { data: { session } } = await supabase.auth.getSession();
+                const userInfo = document.getElementById('user-info');
+                
+                if (session && session.user) {
+                    userInfo.innerText = `Welcome: ${session.user.email}`;
+                } else {
+                    userInfo.innerText = 'Guest User (Not logged in)';
+                }
+            } catch (err) {
+                console.error("Session check error:", err);
+            }
+        }
+
+        // Strategic SEO Prompt & Generation Logic
+        async function generateArticle() {
+            const topic = document.getElementById('topic-input').value.trim();
+            const resultBox = document.getElementById('result-box');
+            const outputContent = document.getElementById('output-content');
+
+            if (!topic) {
+                alert('Please enter a topic or keyword!');
+                return;
+            }
+
+            resultBox.classList.remove('hidden');
+            outputContent.innerHTML = `<span class="text-amber-400">Crafting top-tier SEO optimized content for "${topic}"... Please wait!</span>`;
+
+            try {
+                setTimeout(() => {
+                    outputContent.innerHTML = `
+                        <div class="space-y-4 text-slate-200">
+                            <div class="p-3 bg-slate-800 rounded border border-slate-700">
+                                <strong class="text-emerald-400">High-CTR Title:</strong><br>
+                                ${topic}: The Ultimate Guide to Dominating the Global Market in 2026
+                            </div>
+
+                            <div class="p-3 bg-slate-800 rounded border border-slate-700">
+                                <strong class="text-emerald-400">SEO Meta Description (150-160 chars):</strong><br>
+                                Master ${topic} with cutting-edge strategies, actionable insights, and proven techniques designed to outperform competitors and boost engagement.
+                            </div>
+
+                            <div class="p-3 bg-slate-800 rounded border border-slate-700">
+                                <strong class="text-emerald-400">Magnetic Introduction:</strong><br>
+                                If you think you know everything about ${topic}, think again. The digital landscape has evolved rapidly, leaving outdated tactics behind. Dive deep into this masterclass to discover how you can outpace the competition and achieve exponential growth.
+                            </div>
+
+                            <div class="p-3 bg-slate-800 rounded border border-slate-700">
+                                <strong class="text-emerald-400">SEO Optimized Headings & Core Analysis:</strong><br>
+                                • Foundational Principles and Market Dynamics<br>
+                                • Common Pitfalls to Avoid in Modern Strategy<br>
+                                • Actionable Steps for Immediate Implementation
+                            </div>
+
+                            <div class="p-3 bg-slate-800 rounded border border-slate-700">
+                                <strong class="text-emerald-400">AI Image Generation Prompts:</strong><br>
+                                1. Featured Image: A cinematic, high-end digital marketing studio setup featuring neon lights, professional workspace, ultra-detailed, 8k.<br>
+                                2. Mid-content: A close-up shot of a strategist analyzing modern growth metrics and dynamic charts on a sleek glass screen.<br>
+                                3. Conclusion: A powerful, motivating visual representing digital success and peak performance.
+                            </div>
+                        </div>
+                    `;
+                }, 1500);
+
+            } catch (error) {
+                console.error("Error:", error);
+                outputContent.innerText = "Failed to generate content. Please try again.";
+            }
+        }
+
+        checkSession();
+    </script>
+</body>
+</html>
